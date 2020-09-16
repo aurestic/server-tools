@@ -80,12 +80,16 @@ class FetchmailServer(models.Model):
                 last_date = not failed and date_uids[num] or False
         return count, failed, last_date
 
-    @api.multi
-    def fetch_mail(self):
-        context = self.env.context.copy()
+    def fetch_mail(self, cr, uid, ids, context=None):
+        from pudb.remote import set_trace; set_trace(term_size=(190, 55))
+        if context is None:
+            context = {}
+
+        context = dict(context).copy()
         context['fetchmail_cron_running'] = True
-        for server in self:
+        for server in self.browse(cr, uid, ids, context):
             if server.type == 'imap' and server.last_internal_date:
+                ids = filter(lambda id: id != server.id, ids)
                 _logger.info(
                     'start checking for new emails, starting from %s on %s '
                     'server %s',
@@ -119,4 +123,6 @@ class FetchmailServer(models.Model):
                         (count - failed), failed)
                     vals = {'last_internal_date': last_date}
                     server.write(vals)
-        return super(FetchmailServer, self).fetch_mail()
+        return super(FetchmailServer, self).fetch_mail(
+            cr, uid, ids, context
+        )
