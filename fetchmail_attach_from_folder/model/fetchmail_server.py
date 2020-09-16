@@ -52,7 +52,6 @@ class fetchmail_server(models.Model):
         return retval
 
     def fetch_mail(self, cr, uid, ids, context=None):
-        from pudb.remote import set_trace; set_trace(term_size=(190, 55))
         if context is None:
             context = {}
 
