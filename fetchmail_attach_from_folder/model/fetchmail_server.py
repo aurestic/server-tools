@@ -58,22 +58,43 @@ class fetchmail_server(models.Model):
         check_original = []
 
         for this in self.browse(cr, uid, ids, context):
-            if this.object_id:
-                check_original.append(this.id)
-            if not this.folder_ids.filtered('active'):
-                continue
+            try:
+                if this.object_id:
+                    check_original.append(this.id)
+                if not this.folder_ids.filtered('active'):
+                    continue
 
-            context.update(
-                {
-                    'fetchmail_server_id': this.id,
-                    'server_type': this.type
-                })
+                context.update(
+                    {
+                        'fetchmail_server_id': this.id,
+                        'server_type': this.type
+                    })
 
-            connection = this.connect()
-            for folder in this.folder_ids.filtered('active'):
-                this.with_context(safe_eval(folder.context or '{}'))\
-                    .handle_folder(connection, folder)
-            connection.close()
+                connection = False
+                try:
+                    connection = this.connect()
+                    for folder in this.folder_ids.filtered('active'):
+                        try:
+                            this.with_context(safe_eval(folder.context or '{}'))\
+                                .handle_folder(connection, folder)
+                        except Exception as e:
+                            _logger.error(
+                                "Failure on handle %d folders on %s server %s",
+                                folder.path, this.type, this.name)
+                            _logger.exception(e)
+                except Exception as e:
+                    _logger.error(
+                        "General failure when connecting to mail from %s server "
+                        "%s.", this.type, this.name)
+                    _logger.exception(e)
+                finally:
+                    if connection:
+                        connection.close()
+            except Exception as e:
+                _logger.error(
+                    "General failure when trying to fetch mail from %s server "
+                    "%s.", this.type, this.name)
+                _logger.exception(e)
 
         return super(fetchmail_server, self).fetch_mail(
             cr, uid, check_original, context)
