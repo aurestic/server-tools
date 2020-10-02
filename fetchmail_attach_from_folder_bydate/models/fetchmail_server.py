@@ -22,7 +22,6 @@ class FetchmailServerFolder(models.Model):
     def get_msgids(self, connection):
         folder = self._context.get("folder", self.env["fetchmail.server.folder"])
         msgids = []
-        from pudb.remote import set_trace; set_trace(term_size=(190, 55))
         if folder.last_internal_date:
             last_internal_date = fields.Datetime.from_string(
                 folder.last_internal_date
