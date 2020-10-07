@@ -41,7 +41,7 @@ class FetchmailServerFolder(models.Model):
                     time.mktime(internaldate)
                 )
                 if internaldate_msg > last_internal_date:
-                    msgids.append(new_uid)
+                    msgids.append(str(new_uid))
         else:
             result, msgids = connection.search(None, 'UNDELETED')
-        return result, msgids
+        return result, [' '.join(msgids)]
