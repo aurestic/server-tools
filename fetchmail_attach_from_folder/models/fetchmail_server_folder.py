@@ -2,13 +2,14 @@
 # Copyright - 2020 Aures Tic Consultors S.L <https://www.aurestic.es>.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 import base64
+import email
+import email.policy
 import logging
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from .. import match_algorithm
-
 
 _logger = logging.getLogger(__name__)
 
@@ -104,12 +105,9 @@ class FetchmailServerFolder(models.Model):
                 for subsub in get_all_subclasses(sub)
             ]
 
-        return dict(
-            [
-                (cls.__name__, cls)
-                for cls in get_all_subclasses(match_algorithm.base.Base)
-            ]
-        )
+        return {
+            cls.__name__: cls for cls in get_all_subclasses(match_algorithm.base.Base)
+        }
 
     @api.model
     def _get_match_algorithms_sel(self):
@@ -181,8 +179,9 @@ class FetchmailServerFolder(models.Model):
                 _("Could not fetch %s in %s on %s") % (msgid, self.path, server.server)
             )
         message_org = msgdata[0][1]  # rfc822 message source
+        message = email.message_from_string(message_org, policy=email.policy.SMTP)
         mail_message = self.env["mail.thread"].message_parse(
-            message_org, save_original=server.original
+            message, save_original=server.original
         )
         return (mail_message, message_org)
 
@@ -295,8 +294,8 @@ class FetchmailServerFolder(models.Model):
                     fcontent = fcontent.encode("utf-8")
                 data_attach = {
                     "name": fname,
-                    "datas": base64.b64encode(str(fcontent)),
-                    "datas_fname": fname,
+                    "datas": base64.b64encode(bytes(fcontent)),
+                    "store_fname": fname,
                     "description": _("Mail attachment"),
                     "res_model": model_name,
                     "res_id": match_object.id,

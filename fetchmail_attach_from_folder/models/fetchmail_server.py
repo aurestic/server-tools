@@ -11,7 +11,6 @@ from odoo import _, api, fields, models
 from odoo.tools.misc import UnquoteEvalContext
 from odoo.tools.safe_eval import safe_eval
 
-
 _logger = logging.getLogger(__name__)
 
 list_response_pattern = re.compile(

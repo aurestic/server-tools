@@ -81,29 +81,28 @@ class TestMatchAlgorithms(TransactionCase):
     def test_email_exact(self):
         mail_message = {
             "subject": "Testsubject",
-            "to": "demo@yourcompany.example.com",
+            "to": "addison.olson28@example.com",
             "from": "someone@else.com",
         }
         folder = self._get_base_folder()
         folder.match_algorithm = "EmailExact"
         self.do_matching(
-            email_exact.EmailExact, "base.user_demo_res_partner", folder, mail_message
+            email_exact.EmailExact, "base.res_partner_address_31", folder, mail_message
         )
         self.assertEqual(
-            self.env.ref("base.user_demo_res_partner").message_ids.subject,
+            self.env.ref("base.res_partner_address_31").message_ids.subject,
             mail_message["subject"],
         )
 
     def test_email_domain(self):
         mail_message = {
             "subject": "Testsubject",
-            "to": "test@seagate.com",
+            "to": "addison.olson28@example.com",
             "from": "someone@else.com",
             "attachments": [("hello.txt", "Hello World!")],
         }
         folder = self._get_base_folder()
         folder.match_algorithm = "EmailDomain"
-        folder.use_first_match = True
         self.do_matching(
             email_domain.EmailDomain,
             "base.res_partner_address_31",
@@ -154,5 +153,5 @@ class TestMatchAlgorithms(TransactionCase):
         view = server_model.fields_view_get()
         self.assertTrue(view)
         self.assertIn(
-            "match_algorithm", view["fields"]["folder_ids"]["views"]["form"]["arch"]
+            b"match_algorithm", view["fields"]["folder_ids"]["views"]["form"]["arch"]
         )
