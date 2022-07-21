@@ -179,7 +179,7 @@ class FetchmailServerFolder(models.Model):
                 _("Could not fetch %s in %s on %s") % (msgid, self.path, server.server)
             )
         message_org = msgdata[0][1]  # rfc822 message source
-        message = email.message_from_string(message_org, policy=email.policy.SMTP)
+        message = email.message_from_string(str(message_org), policy=email.policy.SMTP)
         mail_message = self.env["mail.thread"].message_parse(
             message, save_original=server.original
         )
@@ -258,7 +258,7 @@ class FetchmailServerFolder(models.Model):
 
     def run_server_action(self, matched_object_ids):
         self.ensure_one()
-        action = self.action_id or self.server_id.action_id
+        action = self.action_id
         if not action:
             return
         records = self.env[self.model_id.model].browse(matched_object_ids)
