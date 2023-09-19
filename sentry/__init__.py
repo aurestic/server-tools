@@ -71,7 +71,8 @@ def initialize_raven(config, client_cls=None):
     wsgi_server.application = Sentry(
         wsgi_server.application, client=client)
 
-    client.captureMessage('Starting Odoo Server')
+    if not config.get("sentry_ignore_startup_event", False):
+        client.captureMessage('Starting Odoo Server')
     return client
 
 
