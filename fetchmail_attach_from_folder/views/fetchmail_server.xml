@@ -26,6 +26,7 @@
                             <field name="path" />
                             <field name="archive_path" />
                             <field name="model_id" />
+                            <field name="action_id" />
                             <field name="match_algorithm" />
                             <field name="model_field" />
                             <field name="mail_field" />
@@ -76,6 +77,7 @@
                                         attrs="{'required':
                                             [('match_algorithm','in',['email_exact','email_domain'])]}"
                                     />
+                                    <field name="action_id" />
                                     <field
                                         name="mail_field"
                                         placeholder="to,from"
