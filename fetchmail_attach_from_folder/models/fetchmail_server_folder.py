@@ -173,7 +173,7 @@ class FetchmailServerFolder(models.Model):
     def retrieve_imap_folder(self, connection):
         """Retrieve all mails for one IMAP folder."""
         self.ensure_one()
-        msgids = self.get_msgids(connection, "UNDELETED")
+        msgids = self.get_msgids(connection, "UNSEEN UNDELETED")
         for msgid in msgids[0].split():
             # We will accept exceptions for single messages
             try:
