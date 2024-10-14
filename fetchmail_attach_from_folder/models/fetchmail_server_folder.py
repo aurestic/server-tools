@@ -26,7 +26,6 @@ class FetchmailServerFolder(models.Model):
     state = fields.Selection(
         [("draft", "Not Confirmed"), ("done", "Confirmed")],
         string="Status",
-        readonly=True,
         required=True,
         copy=False,
         default="draft",

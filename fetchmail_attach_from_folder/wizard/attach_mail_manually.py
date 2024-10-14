@@ -96,12 +96,12 @@ class AttachMailManuallyMail(models.TransientModel):
     _name = "fetchmail.attach.mail.manually.mail"
     _description = __doc__
 
-    wizard_id = fields.Many2one("fetchmail.attach.mail.manually", readonly=True)
-    msgid = fields.Char("Message id", readonly=True)
-    subject = fields.Char(readonly=True)
-    date = fields.Datetime(readonly=True)
-    email_from = fields.Char("From", readonly=True)
-    body = fields.Html(readonly=True)
+    wizard_id = fields.Many2one("fetchmail.attach.mail.manually")
+    msgid = fields.Char("Message id")
+    subject = fields.Char()
+    date = fields.Datetime()
+    email_from = fields.Char("From")
+    body = fields.Html()
     object_id = fields.Reference(
         lambda self: [(m.model, m.name) for m in self.env["ir.model"].search([])]
     )
