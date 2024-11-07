@@ -2,6 +2,7 @@ checksumdir
 raven
 pysftp
 pyopenssl
+pyRFC3339==1.1
 acme
 cryptography
 dnspython
