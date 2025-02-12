@@ -1,7 +1,7 @@
 # generated from manifests external_dependencies
 acme
 astor
-cryptography
+cryptography==3.4.8
 dataclasses
 dnspython
 josepy
