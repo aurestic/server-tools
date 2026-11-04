@@ -116,12 +116,10 @@ class XLSXTemplate(models.Model):
     )
     report_menu_id = fields.Many2one(
         comodel_name="ir.ui.menu",
-        string="Report Menu",
         readonly=True,
     )
     report_action_id = fields.Many2one(
         comodel_name="ir.actions.report",
-        string="Report Action",
     )
 
     def _compute_result_field(self):

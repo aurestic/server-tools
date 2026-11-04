@@ -15,7 +15,6 @@ class XLSXReport(models.AbstractModel):
     data = fields.Binary(string="File", readonly=True)
     template_id = fields.Many2one(
         "xlsx.template",
-        string="Template",
         required=True,
         ondelete="cascade",
         domain=lambda self: self.env.context.get("template_domain", []),
